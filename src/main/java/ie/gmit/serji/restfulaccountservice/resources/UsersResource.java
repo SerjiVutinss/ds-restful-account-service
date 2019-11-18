@@ -4,20 +4,20 @@ import ie.gmit.serji.restfulaccountservice.api.User;
 import ie.gmit.serji.restfulaccountservice.services.IUsersDbService;
 import ie.gmit.serji.restfulaccountservice.services.UsersDbService;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.ArrayList;
+import java.net.URISyntaxException;
 import java.util.List;
 
 @Path("/users")
 @Produces(MediaType.APPLICATION_JSON)
 public class UsersResource {
 
-    private IUsersDbService _usersService = UsersDbService.getInstance();
+    private IUsersDbService _usersService;
+    public UsersResource() {
+         _usersService = UsersDbService.getInstance();
+    }
 
     @GET
     public Response getUsers() {
@@ -37,6 +37,14 @@ public class UsersResource {
         } else {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
+    }
+
+    @POST
+    public Response createUser(User user) throws URISyntaxException {
+
+        Integer newId = _usersService.insert(user);
+        user.setUserId(newId);
+        return Response.status(Response.Status.CREATED).entity(user).build();
     }
 
 }

@@ -13,7 +13,7 @@ public interface IUsersDbService {
     User getOne(Integer id);
 
     // add and return a new user
-    User insert(User u);
+    Integer insert(User u);
 
     // update an existing user
     User update(int id, User u);

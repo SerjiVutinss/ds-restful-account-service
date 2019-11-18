@@ -22,7 +22,7 @@ public class UsersDbService implements IUsersDbService {
     private Map<Integer, User> _users;
 
     private UsersDbService() {
-        _users = new HashMap<>();
+        _users = new HashMap<Integer, User>();
         seedDb();
     }
 
@@ -41,15 +41,20 @@ public class UsersDbService implements IUsersDbService {
     }
 
     @Override
-    public User insert(User u) {
-        int id = getNewKey();
-        return _users.put(id, u);
+    public Integer insert(User u) {
+        Integer id = getNewKey();
+        u.setUserId(id);
+        _users.put(id, u);
+
+        return id;
     }
 
     @Override
     public User update(int id, User u) {
         if (_users.containsKey(id)) {
-            return _users.put(id, u);
+            _users.put(id, u);
+
+            return _users.get(id);
         }
         return null;
     }

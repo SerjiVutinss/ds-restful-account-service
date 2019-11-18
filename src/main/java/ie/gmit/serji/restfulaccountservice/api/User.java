@@ -7,7 +7,6 @@ public class User {
 
     //    userId:
     //    type: integer
-    @NotNull
     private Integer userId;
 
     //    userName:
