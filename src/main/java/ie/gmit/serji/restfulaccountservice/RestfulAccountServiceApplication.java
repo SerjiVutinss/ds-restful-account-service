@@ -1,5 +1,7 @@
 package ie.gmit.serji.restfulaccountservice;
 
+import ie.gmit.serji.restfulaccountservice.health.TemplateHealthCheck;
+import ie.gmit.serji.restfulaccountservice.resources.HelloWorldResource;
 import io.dropwizard.Application;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
@@ -23,7 +25,18 @@ public class RestfulAccountServiceApplication extends Application<RestfulAccount
     @Override
     public void run(RestfulAccountServiceConfiguration configuration,
                     Environment environment) {
-        // nothing to do yet
+
+        final HelloWorldResource resource = new HelloWorldResource(
+                configuration.getTemplate(),
+                configuration.getDefaultName()
+        );
+
+        final TemplateHealthCheck healthCheck = new TemplateHealthCheck(
+                configuration.getTemplate()
+        );
+
+        environment.healthChecks().register("template", healthCheck);
+        environment.jersey().register(resource);
     }
 
 }
