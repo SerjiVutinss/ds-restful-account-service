@@ -1,6 +1,8 @@
 package ie.gmit.serji.restfulaccountservice.resources;
 
 import ie.gmit.serji.restfulaccountservice.api.User;
+import ie.gmit.serji.restfulaccountservice.services.IUsersDbService;
+import ie.gmit.serji.restfulaccountservice.services.UsersDbService;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -14,22 +16,14 @@ import java.util.List;
 @Produces(MediaType.APPLICATION_JSON)
 public class UsersResource {
 
-    private List<User> usersList;
+    private IUsersDbService _usersService = UsersDbService.getInstance();
 
     @GET
     public Response getUsers() {
 
-        usersList = new ArrayList();
+        List<User> allUsers  = _usersService.getAll();
 
-        User u1 = new User();
-        u1.setUserId(1);;
-        u1.setUserName("JohnDoe");;
-        u1.setEmail("johndoe@example.com");
-        u1.setPassword("Hello123!");
-
-        usersList.add(u1);
-
-        return Response.ok(usersList).build();
+        return Response.ok(allUsers).build();
     }
 
 }
