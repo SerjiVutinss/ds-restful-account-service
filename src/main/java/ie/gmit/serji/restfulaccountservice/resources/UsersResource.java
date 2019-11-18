@@ -7,8 +7,6 @@ import ie.gmit.serji.restfulaccountservice.services.UsersDbService;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.net.URISyntaxException;
-import java.net.http.HttpResponse;
 import java.util.List;
 
 @Path("/users")
@@ -52,7 +50,7 @@ public class UsersResource {
 
     @PUT
     @Path("/{userId}")
-    public Response updateUser(@PathParam("userId") Integer userId, User user) {
+    public Response updateUserById(@PathParam("userId") Integer userId, User user) {
 
         if (_usersService.getOne(userId) != null) {
             // user exists - update the user in the database
@@ -62,7 +60,19 @@ public class UsersResource {
         } else {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
+    }
 
+    @DELETE
+    @Path("/{userId}")
+    public Response deleteUserById(@PathParam("userId") Integer userId) {
+
+        User u = _usersService.getOne(userId);
+        if (u != null) {
+            _usersService.remove(userId);
+            return Response.ok().build();
+        } else {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
     }
 
 }
