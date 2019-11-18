@@ -8,6 +8,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.net.URISyntaxException;
+import java.net.http.HttpResponse;
 import java.util.List;
 
 @Path("/users")
@@ -15,36 +16,53 @@ import java.util.List;
 public class UsersResource {
 
     private IUsersDbService _usersService;
+
     public UsersResource() {
-         _usersService = UsersDbService.getInstance();
+        _usersService = UsersDbService.getInstance();
     }
 
     @GET
     public Response getUsers() {
 
-        List<User> allUsers  = _usersService.getAll();
+        List<User> allUsers = _usersService.getAll();
 
         return Response.ok(allUsers).build();
     }
 
     @GET
     @Path("/{userId}")
-    public Response getUserById(@PathParam("userId") Integer userId){
+    public Response getUserById(@PathParam("userId") Integer userId) {
 
         User u = _usersService.getOne(userId);
-        if(u!=null){
+        if (u != null) {
             return Response.ok(u).build();
         } else {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
     }
 
+    // TODO: check that request is well-formed
     @POST
-    public Response createUser(User user) throws URISyntaxException {
+    public Response createUser(User user) {
 
         Integer newId = _usersService.insert(user);
         user.setUserId(newId);
         return Response.status(Response.Status.CREATED).entity(user).build();
+    }
+
+    @PUT
+    @Path("/{userId}")
+    public Response updateUser(@PathParam("userId") Integer userId, User user) {
+
+        if (_usersService.getOne(userId) != null) {
+            // user exists - update the user in the database
+            User updatedUser = _usersService.update(user.getUserId(), user);
+            // return the updated user from the database
+            return Response.ok(updatedUser).build();
+        } else {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+
     }
 
 }
