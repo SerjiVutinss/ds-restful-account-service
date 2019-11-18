@@ -1,5 +1,7 @@
 package ie.gmit.serji.restfulaccountservice.resources;
 
+import com.google.protobuf.Int32Value;
+import ie.gmit.serji.restfulaccountservice.GrpcPasswordServiceClient;
 import ie.gmit.serji.restfulaccountservice.api.User;
 import ie.gmit.serji.restfulaccountservice.services.IUsersDbService;
 import ie.gmit.serji.restfulaccountservice.services.UsersDbService;
@@ -42,8 +44,10 @@ public class UsersResource {
     // TODO: check that request is well-formed
     @POST
     public Response createUser(User user) {
-
+        // Insert the new user to get a userId
         Integer newId = _usersService.insert(user);
+        // TODO: async call to password service generateHash() here!
+
         user.setUserId(newId);
         return Response.status(Response.Status.CREATED).entity(user).build();
     }
