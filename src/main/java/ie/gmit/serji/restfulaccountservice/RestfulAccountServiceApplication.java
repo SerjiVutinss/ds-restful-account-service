@@ -32,6 +32,13 @@ public class RestfulAccountServiceApplication extends Application<RestfulAccount
     public void run(RestfulAccountServiceConfiguration configuration,
                     Environment environment) {
 
+//        environment.jersey().register(new AbstractBinder() {
+//            @Override
+//            protected void configure() {
+//                bind(IPasswordService.class).to(PasswordService.class);
+//            }
+//        });
+
         final HelloWorldResource helloWorldResource = new HelloWorldResource(
                 configuration.getTemplate(),
                 configuration.getDefaultName()

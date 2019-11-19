@@ -32,7 +32,7 @@ public class UsersDbService implements IUsersDbService {
     }
 
     @Override
-    public User getOne(Integer id) {
+    public User getOne(int id) {
 
         if (_users.containsKey(id)) {
             return _users.get(id);
@@ -41,7 +41,7 @@ public class UsersDbService implements IUsersDbService {
     }
 
     @Override
-    public Integer insert(User user, String password) {
+    public User insert(User user, String password) {
         // generate a new key for this user and set it
         user.setUserId(getNewKey());
         // generate hash and salt and set on this object
@@ -53,18 +53,19 @@ public class UsersDbService implements IUsersDbService {
         // put the object in the map
         _users.put(user.getUserId(), user);
 
-        return user.getUserId();
+        return user;
     }
 
     @Override
-    public User update(User user, String password) {
-        if (_users.containsKey(user.getUserId())) {
+    public User update(int userId, User user, String password) {
+        if (_users.containsKey(userId)) {
 
-            byte[][] result = _passwordService.hashPassword(user.getUserId(), password);
+            byte[][] result = _passwordService.hashPassword(userId, password);
             user.setHashedPassword(result[0]);
             user.setSalt(result[1]);
+            user.setUserId(userId);
 
-            _users.put(user.getUserId(), user);
+            _users.put(userId, user);
 
             return _users.get(user.getUserId());
         }

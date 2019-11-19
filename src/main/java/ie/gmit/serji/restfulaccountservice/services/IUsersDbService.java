@@ -10,13 +10,13 @@ public interface IUsersDbService {
     List<User> getAll();
 
     // get a single user by userId
-    User getOne(Integer id);
+    User getOne(int id);
 
     // add and return a new user
-    Integer insert(User u, String password);
+    User insert(User u, String password);
 
     // update an existing user
-    User update(User u, String password);
+    User update(int userId, User u, String password);
 
     // delete an existing user
     User remove(int id);

@@ -5,6 +5,7 @@ import ie.gmit.serji.restfulaccountservice.api.User;
 import ie.gmit.serji.restfulaccountservice.services.IPasswordService;
 import ie.gmit.serji.restfulaccountservice.services.IUsersDbService;
 
+import javax.validation.Valid;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -24,7 +25,7 @@ public class LoginResource {
     }
 
     @POST
-    public Response loginUser(LoginUser loginUser) {
+    public Response loginUser(@Valid LoginUser loginUser) {
         // check to see if the user exists
         User user = _usersService.findByEmail(loginUser.getEmail());
         if (user != null) {

@@ -1,14 +1,14 @@
 package ie.gmit.serji.restfulaccountservice.api;
 
+import org.hibernate.validator.constraints.NotEmpty;
+
 import javax.validation.constraints.Pattern;
 
 public class LoginUser {
 
-    //    email:
-    //    type: string
     @Pattern(regexp = ".+@.+\\.[a-z]+")
     private String email;
-
+    @NotEmpty
     private String password;
 
     public String getEmail() {

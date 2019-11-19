@@ -4,6 +4,7 @@ import ie.gmit.serji.restfulaccountservice.api.UpsertUser;
 import ie.gmit.serji.restfulaccountservice.api.User;
 import ie.gmit.serji.restfulaccountservice.services.IUsersDbService;
 
+import javax.validation.Valid;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -43,11 +44,10 @@ public class UsersResource {
 
     // TODO: check that request is well-formed
     @POST
-    public Response createUser(UpsertUser user) {
+    public Response createUser(@Valid UpsertUser user) {
         // Insert the new user to get a userId
         User u = new User(user);
-        Integer newId = _usersDbService.insert(u, user.getPassword());
-        u.setUserId(newId);
+        u = _usersDbService.insert(u, user.getPassword());
 
         return Response.status(Response.Status.CREATED).entity(u).build();
     }
@@ -61,7 +61,7 @@ public class UsersResource {
             User updatedUser = new User(user);
             // update the user in the database, passing in the password so that
             // a new hash and salt can be generated
-            updatedUser = _usersDbService.update(updatedUser, user.getPassword());
+            updatedUser = _usersDbService.update(userId, updatedUser, user.getPassword());
 
             // return the updated user from the database
             return Response.ok(updatedUser).build();
