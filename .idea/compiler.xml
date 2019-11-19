@@ -9,8 +9,5 @@
         <module name="restful-account-service" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="restfulaccountservice" target="1.8" />
-    </bytecodeTargetLevel>
   </component>
 </project>

@@ -1,5 +1,6 @@
 package ie.gmit.serji.restfulaccountservice;
 
+import ie.gmit.serji.restfulaccountservice.grpc.GrpcPasswordClient;
 import ie.gmit.serji.restfulaccountservice.health.TemplateHealthCheck;
 import ie.gmit.serji.restfulaccountservice.resources.HelloWorldResource;
 import ie.gmit.serji.restfulaccountservice.resources.LoginResource;
@@ -42,7 +43,7 @@ public class RestfulAccountServiceApplication extends Application<RestfulAccount
 
 
         // TODO: DI not working correctly - passing implementations here
-        final IPasswordService passwordService = new PasswordService(GrpcPasswordServiceClient.getInstance());
+        final IPasswordService passwordService = new PasswordService(GrpcPasswordClient.getInstance());
         final IUsersDbService usersDbService = new UsersDbService(passwordService);
 
         final UsersResource usersResource = new UsersResource(usersDbService);

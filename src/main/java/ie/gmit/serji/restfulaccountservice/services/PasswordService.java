@@ -1,23 +1,73 @@
 package ie.gmit.serji.restfulaccountservice.services;
 
-import com.google.common.util.concurrent.FutureCallback;
-import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
-import com.google.common.util.concurrent.MoreExecutors;
 import com.google.protobuf.ByteString;
 import ie.gmit.serji.passwordservice.HashInput;
 import ie.gmit.serji.passwordservice.HashOutput;
 import ie.gmit.serji.passwordservice.ValidateInput;
-import ie.gmit.serji.restfulaccountservice.GrpcPasswordServiceClient;
+import ie.gmit.serji.restfulaccountservice.grpc.IGrpcPasswordClient;
 
 import java.util.concurrent.ExecutionException;
 
+/**
+ * Implementation of IPasswordService
+ *
+ * See IPasswordService for details of implemented methods
+ */
 public class PasswordService implements IPasswordService {
 
-    private final GrpcPasswordServiceClient _grpcPasswordService;
+    /**
+     *
+     */
+    private final IGrpcPasswordClient _grpcPasswordService;
 
-    public PasswordService(GrpcPasswordServiceClient grpcPasswordServiceClient) {
-        this._grpcPasswordService = grpcPasswordServiceClient;
+    public PasswordService(IGrpcPasswordClient grpcPasswordClient) {
+        this._grpcPasswordService = grpcPasswordClient;
+    }
+
+    @Override
+    public boolean validatePassword(String password, byte[] hashedPassword, byte[] salt) {
+
+        ValidateInput input = ValidateInput.newBuilder()
+                .setPassword(password)
+                .setHashedPassword(ByteString.copyFrom(hashedPassword))
+                .setSalt(ByteString.copyFrom(salt))
+                .build();
+
+        return _grpcPasswordService.validate(input).getValue();
+    }
+
+    /*
+    Asynchronous Call to GrpcPasswordServiceClient
+    Note that this method is called synchronously in the IPasswordService implementation
+     */
+    @Override
+    public byte[][] hashPassword(int userId, String password) {
+
+        // Create the request object using method arguments.
+        HashInput hashInput = HashInput.newBuilder()
+                .setUserId(userId)
+                .setPassword(password)
+                .build();
+
+        // Call the gRPC client method and store its response as a ListenableFuture.
+        ListenableFuture<HashOutput> future = _grpcPasswordService.hashAsync(hashInput);
+        // Create a return value for this method.
+        byte[][] result = new byte[2][];
+        try {
+            // Block until the response is received.
+            HashOutput response = future.get();
+            // Set the values in the return value.
+            result[0] = response.getHashedPassword().toByteArray();
+            result[1] = response.getSalt().toByteArray();
+
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+        // Return the values.
+        return result;
     }
 
 //    // Synchronous Calls
@@ -37,43 +87,4 @@ public class PasswordService implements IPasswordService {
 //
 //        return result;
 //    }
-
-    @Override
-    public boolean validatePassword(String password, byte[] hashedPassword, byte[] salt) {
-
-        ValidateInput input = ValidateInput.newBuilder()
-                .setPassword(password)
-                .setHashedPassword(ByteString.copyFrom(hashedPassword))
-                .setSalt(ByteString.copyFrom(salt))
-                .build();
-
-        return _grpcPasswordService.validate(input).getValue();
-    }
-
-    // Asynchronous Call to GrpcPasswordServiceClient
-    @Override
-    public byte[][] hashPassword(int userId, String password) {
-
-        byte[][] result = new byte[2][];
-
-
-        HashInput hashInput = HashInput.newBuilder()
-                .setUserId(userId)
-                .setPassword(password)
-                .build();
-
-        ListenableFuture<HashOutput> future = _grpcPasswordService.hashAsync(hashInput);
-
-        try {
-            HashOutput response = future.get();
-            result[0] = response.getHashedPassword().toByteArray();
-            result[1] = response.getSalt().toByteArray();
-
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
-        return result;
-    }
 }
