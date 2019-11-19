@@ -1,6 +1,6 @@
 package ie.gmit.serji.restfulaccountservice;
+
 import com.google.protobuf.BoolValue;
-import com.google.protobuf.ByteString;
 import com.google.protobuf.Int32Value;
 import ie.gmit.serji.passwordservice.HashInput;
 import ie.gmit.serji.passwordservice.HashOutput;
@@ -13,6 +13,7 @@ import io.grpc.Status;
 import io.grpc.StatusRuntimeException;
 import io.grpc.stub.StreamObserver;
 
+import javax.validation.Valid;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -20,7 +21,7 @@ import java.util.logging.Logger;
 public class GrpcPasswordServiceClient {
 
     private static final String HOST = "localhost";
-    private  static final int PORT = 8080;
+    private static final int PORT = 8080;
 
     private static final Logger logger = Logger.getLogger(GrpcPasswordServiceClient.class.getName());
 
@@ -32,11 +33,13 @@ public class GrpcPasswordServiceClient {
     private static User _theUser;
 
     private static GrpcPasswordServiceClient _instance;
+
     public static GrpcPasswordServiceClient getInstance() {
-        if(_instance==null) _instance = new GrpcPasswordServiceClient();
+        if (_instance == null) _instance = new GrpcPasswordServiceClient();
         return _instance;
     }
-    private GrpcPasswordServiceClient(){
+
+    private GrpcPasswordServiceClient() {
 
         channel = ManagedChannelBuilder
                 .forAddress(HOST, PORT)
@@ -47,87 +50,85 @@ public class GrpcPasswordServiceClient {
         asyncPasswordService = PasswordServiceGrpc.newStub(channel);
     }
 
+    public HashOutput hash(HashInput hashInput) {
+
+        return syncPasswordService.hash(hashInput);
+    }
+
+    public BoolValue validate(ValidateInput validateInput){
+        return syncPasswordService.validate(validateInput);
+    }
+
     public void shutdown() throws InterruptedException {
         channel.shutdown().awaitTermination(5, TimeUnit.SECONDS);
     }
 
-    // asynchronous call to hash()
-    public void hash(HashInput input) {
-        StreamObserver<HashOutput> responseObserver = new StreamObserver<HashOutput>() {
-            @Override
-            public void onNext(HashOutput output) {
-
-                logger.info("Received hash: " + output);
-
-
-
-//                _theUser.hashedPassword = output.getHashedPassword().toByteArray();
-//                _theUser.salt = output.getSalt().toByteArray();
-            }
-
-            @Override
-            public void onError(Throwable throwable) {
-                Status status = Status.fromThrowable(throwable);
-                logger.log(Level.WARNING, "RPC Error: {0}", status);
-            }
-
-            @Override
-            public void onCompleted() {
-                logger.info("Finished receiving HashOutput");
-                // create ValidateInput object
-//                ValidateInput validateInput = ValidateInput.newBuilder()
-//                        .setPassword(_theUser.password)
-//                        .setHashedPassword(ByteString.copyFrom(_theUser.hashedPassword))
-//                        .setSalt(ByteString.copyFrom(_theUser.salt))
-//                        .build();
+//    // asynchronous call to hash()
+//    public HashOutput hash( HashInput hashInput) {
+//        final HashOutput[] retVal = new HashOutput[1];
+//        StreamObserver responseObserver = new StreamObserver<HashOutput>() {
+//            @Override
+//            public void onNext(HashOutput output) {
+//                logger.info("Received hash: " + output);
+//                retVal[0] = output;
+//            }
 //
-//                validate(validateInput);
-            }
-        };
+//            @Override
+//            public void onError(Throwable throwable) {
+//                Status status = Status.fromThrowable(throwable);
+//                logger.log(Level.WARNING, "RPC Error: {0}", status);
+//            }
+//
+//            @Override
+//            public void onCompleted() {
+//                logger.info("Finished receiving HashOutput");
+//            }
+//        };
+//
+////        try {
+//            logger.info("Requesting HashOutput");
+//            asyncPasswordService.hash(hashInput, responseObserver);
+////            logger.info("Returned from requesting HashOutput");
+////        } catch (
+////                StatusRuntimeException ex) {
+////            logger.log(Level.WARNING, "RPC failed: {0}", ex.getStatus());
+////            return null;
+////        }
+//        return retVal[0];
+//    }
 
-        try {
-            logger.info("Requesting HashOutput");
-            asyncPasswordService.hash(input, responseObserver);
-            logger.info("Returned from requesting HashOutput");
-        } catch (
-                StatusRuntimeException ex) {
-            logger.log(Level.WARNING, "RPC failed: {0}", ex.getStatus());
-            return;
-        }
-    }
-
-    // async call to validate()
-    public void validate(ValidateInput input) {
-        StreamObserver<BoolValue> responseObserver = new StreamObserver<BoolValue>() {
-            @Override
-            public void onNext(BoolValue output) {
-                logger.info("Received BoolValue: " + output.getValue());
-            }
-
-            @Override
-            public void onError(Throwable throwable) {
-                Status status = Status.fromThrowable(throwable);
-                logger.log(Level.WARNING, "RPC Error: {0}", status);
-            }
-
-            @Override
-            public void onCompleted() {
-                logger.info("Finished receiving BoolValue");
-                // End program
-                System.exit(0);
-            }
-        };
-
-        try {
-            logger.info("Requesting BoolValue");
-            asyncPasswordService.validate(input, responseObserver);
-            logger.info("Returned from requesting BoolValue");
-        } catch (
-                StatusRuntimeException ex) {
-            logger.log(Level.WARNING, "RPC failed: {0}", ex.getStatus());
-            return;
-        }
-    }
+//    // async call to validate()
+//    public void validate(ValidateInput input) {
+//        StreamObserver<BoolValue> responseObserver = new StreamObserver<BoolValue>() {
+//            @Override
+//            public void onNext(BoolValue output) {
+//                logger.info("Received BoolValue: " + output.getValue());
+//            }
+//
+//            @Override
+//            public void onError(Throwable throwable) {
+//                Status status = Status.fromThrowable(throwable);
+//                logger.log(Level.WARNING, "RPC Error: {0}", status);
+//            }
+//
+//            @Override
+//            public void onCompleted() {
+//                logger.info("Finished receiving BoolValue");
+//                // End program
+//                System.exit(0);
+//            }
+//        };
+//
+//        try {
+//            logger.info("Requesting BoolValue");
+//            asyncPasswordService.validate(input, responseObserver);
+//            logger.info("Returned from requesting BoolValue");
+//        } catch (
+//                StatusRuntimeException ex) {
+//            logger.log(Level.WARNING, "RPC failed: {0}", ex.getStatus());
+//            return;
+//        }
+//    }
 
     // async call to generatePassword()
     public void generatePassword(Int32Value userId) {
@@ -168,7 +169,6 @@ public class GrpcPasswordServiceClient {
             return;
         }
     }
-
 
 
 }

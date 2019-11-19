@@ -24,11 +24,11 @@ public class User {
 
     //    hashedPassword:
     //    type: string
-    private String hashedPassword;
+    private byte[] hashedPassword;
 
     //    salt:
     //    type: string
-    private String salt;
+    private byte[] salt;
 
     public User() {
     }
@@ -38,8 +38,8 @@ public class User {
             String userName,
             String email,
             String password,
-            String hashedPassword,
-            String salt
+            byte[] hashedPassword,
+            byte[] salt
             ) {
         this.userId = userId;
         this.userName = userName;
@@ -82,19 +82,19 @@ public class User {
         this.password = password;
     }
 
-    public String getHashedPassword() {
+    public byte[] getHashedPassword() {
         return hashedPassword;
     }
 
-    public void setHashedPassword(String hashedPassword) {
+    public void setHashedPassword(byte[] hashedPassword) {
         this.hashedPassword = hashedPassword;
     }
 
-    public String getSalt() {
+    public byte[] getSalt() {
         return salt;
     }
 
-    public void setSalt(String salt) {
+    public void setSalt(byte[] salt) {
         this.salt = salt;
     }
 

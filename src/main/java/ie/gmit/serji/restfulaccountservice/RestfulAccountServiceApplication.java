@@ -2,6 +2,7 @@ package ie.gmit.serji.restfulaccountservice;
 
 import ie.gmit.serji.restfulaccountservice.health.TemplateHealthCheck;
 import ie.gmit.serji.restfulaccountservice.resources.HelloWorldResource;
+import ie.gmit.serji.restfulaccountservice.resources.LoginResource;
 import ie.gmit.serji.restfulaccountservice.resources.UsersResource;
 import io.dropwizard.Application;
 import io.dropwizard.setup.Bootstrap;
@@ -37,11 +38,14 @@ public class RestfulAccountServiceApplication extends Application<RestfulAccount
         );
 
         final UsersResource usersResource = new UsersResource();
+        final LoginResource loginResource = new LoginResource();
 
         environment.healthChecks().register("template", healthCheck);
 
         environment.jersey().register(helloWorldResource);
         environment.jersey().register(usersResource);
+        environment.jersey().register(loginResource);
     }
 
 }
+

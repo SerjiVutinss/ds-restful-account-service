@@ -67,6 +67,17 @@ public class UsersDbService implements IUsersDbService {
         return null;
     }
 
+    @Override
+    public User findByEmail(String email) {
+
+        for (User u: _users.values()) {
+            if(u.getEmail().equals(email)){
+                return u;
+            }
+        }
+        return null;
+    }
+
     /*
     Mock generate new Primary Key - userId
         - this may cause issues if multiple clients are inserting
@@ -84,19 +95,19 @@ public class UsersDbService implements IUsersDbService {
      */
     private void seedDb() {
 
-        User u1 = new User(1, "JohnDoe", "johndoe@example.com", "Hello123!", "mockhashed", "mocksalt");
+        User u1 = new User(1, "JohnDoe", "johndoe@example.com", "Hello123!", "mockhashed".getBytes(), "mocksalt".getBytes());
         insert(u1);
 
-        User u2 = new User(2, "JaneDoe", "janedoe@example.com", "Hello123!", "mockhashed", "mocksalt");
+        User u2 = new User(2, "JaneDoe", "janedoe@example.com", "Hello123!", "mockhashed".getBytes(), "mocksalt".getBytes());
         insert(u2);
 
-        User u3 = new User(3, "JohnSmith", "johnsmith@example.com", "Hello123!", "mockhashed", "mocksalt");
+        User u3 = new User(3, "JohnSmith", "johnsmith@example.com", "Hello123!", "mockhashed".getBytes(), "mocksalt".getBytes());
         insert(u3);
 
-        User u4 = new User(4, "JimJohnson", "jimjohnson@example.com", "Hello123!", "mockhashed", "mocksalt");
+        User u4 = new User(4, "JimJohnson", "jimjohnson@example.com", "Hello123!", "mockhashed".getBytes(), "mocksalt".getBytes());
         insert(u4);
 
-        User u5 = new User(5, "MaryMurphy", "marymurphy@example.com", "Hello123!", "mockhashed", "mocksalt");
+        User u5 = new User(5, "MaryMurphy", "marymurphy@example.com", "Hello123!", "mockhashed".getBytes(), "mocksalt".getBytes());
         insert(u5);
 
     }

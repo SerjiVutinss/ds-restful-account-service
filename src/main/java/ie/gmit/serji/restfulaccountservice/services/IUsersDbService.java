@@ -21,4 +21,7 @@ public interface IUsersDbService {
     // delete an existing user
     User remove(int id);
 
+    // Find a user by email
+    User findByEmail(String email);
+
 }
