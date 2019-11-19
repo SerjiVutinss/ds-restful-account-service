@@ -4,19 +4,12 @@ import javax.validation.constraints.Pattern;
 
 public class LoginUser {
 
-    //    userName:
-    //    type: string
-//    private String userName;
-
     //    email:
     //    type: string
     @Pattern(regexp = ".+@.+\\.[a-z]+")
     private String email;
 
-    //    password:
-    //    type: string
     private String password;
-
 
     public String getEmail() {
         return email;
@@ -33,4 +26,7 @@ public class LoginUser {
     public void setPassword(String password) {
         this.password = password;
     }
+
+
+
 }

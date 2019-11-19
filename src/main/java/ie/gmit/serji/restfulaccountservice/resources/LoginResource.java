@@ -2,10 +2,8 @@ package ie.gmit.serji.restfulaccountservice.resources;
 
 import ie.gmit.serji.restfulaccountservice.api.LoginUser;
 import ie.gmit.serji.restfulaccountservice.api.User;
-import ie.gmit.serji.restfulaccountservice.services.IPasswordClientService;
+import ie.gmit.serji.restfulaccountservice.services.IPasswordService;
 import ie.gmit.serji.restfulaccountservice.services.IUsersDbService;
-import ie.gmit.serji.restfulaccountservice.services.PasswordClientService;
-import ie.gmit.serji.restfulaccountservice.services.UsersDbService;
 
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -17,31 +15,24 @@ import javax.ws.rs.core.Response;
 @Produces(MediaType.APPLICATION_JSON)
 public class LoginResource {
 
-    private IUsersDbService _usersService;
-    private IPasswordClientService _passwordService;
+    private  IUsersDbService _usersService;
+    private  IPasswordService _passwordService;
 
-    public LoginResource() {
-        _usersService = UsersDbService.getInstance();
-        _passwordService = new PasswordClientService();
+    public LoginResource(IUsersDbService usersService, IPasswordService passwordService) {
+        _usersService = usersService;
+        _passwordService = passwordService;
     }
 
     @POST
     public Response loginUser(LoginUser loginUser) {
         // check to see if the user exists
-        User u = _usersService.findByEmail(loginUser.getEmail());
-        if (u != null) {
-            System.out.println("Found User: " + u.getUserName());
-            // user exists - check if password is valid
-
-            System.out.println(loginUser.getPassword());
-
-
-            boolean isValid = _passwordService.validateUser(u, loginUser.getPassword());
-
-            // valid entry - return OK and the user
-            if (isValid) return Response.ok(u).build();
+        User user = _usersService.findByEmail(loginUser.getEmail());
+        if (user != null) {
+            // user exists - check if password is valid by calling IPasswordService implementation
+            boolean isValid = _passwordService.validatePassword(loginUser.getPassword(), user.getHashedPassword(), user.getSalt());
+            // valid password - return OK and the User
+            if (isValid) return Response.ok(user).build();
         }
-
         // failed login - return unauthorized
         return Response.status(Response.Status.UNAUTHORIZED).build();
     }

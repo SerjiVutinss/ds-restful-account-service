@@ -1,29 +1,29 @@
 package ie.gmit.serji.restfulaccountservice.services;
 
+import ie.gmit.serji.restfulaccountservice.api.UpsertUser;
 import ie.gmit.serji.restfulaccountservice.api.User;
+import ie.gmit.serji.restfulaccountservice.data.MockDataStore;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 /*
-Mock a Users Database using a Map
+Mock Database operations
  */
 public class UsersDbService implements IUsersDbService {
 
-    private static UsersDbService _instance;
-
-    public static UsersDbService getInstance() {
-        if(_instance==null) _instance = new UsersDbService();
-        return _instance;
-    }
-
     private Map<Integer, User> _users;
 
-    private UsersDbService() {
-        _users = new HashMap<Integer, User>();
-        seedDb();
+    private IPasswordService _passwordService;
+
+    public UsersDbService(IPasswordService passwordService) {
+        _passwordService = passwordService;
+
+        System.out.println("CREATING DB");
+        _users = MockDataStore.getInstance().getUsersDataStore();
+
+        if (_users.size() == 0) seedDb();
     }
 
     @Override
@@ -41,20 +41,32 @@ public class UsersDbService implements IUsersDbService {
     }
 
     @Override
-    public Integer insert(User u) {
-        Integer id = getNewKey();
-        u.setUserId(id);
-        _users.put(id, u);
+    public Integer insert(User user, String password) {
+        // generate a new key for this user and set it
+        user.setUserId(getNewKey());
+        // generate hash and salt and set on this object
+        byte[][] result = _passwordService.hashPassword(user.getUserId(), password);
+        // now create a User object from the UpsertUser
+        // set its hashedPassword and salt values
+        user.setHashedPassword(result[0]);
+        user.setSalt(result[1]);
+        // put the object in the map
+        _users.put(user.getUserId(), user);
 
-        return id;
+        return user.getUserId();
     }
 
     @Override
-    public User update(int id, User u) {
-        if (_users.containsKey(id)) {
-            _users.put(id, u);
+    public User update(User user, String password) {
+        if (_users.containsKey(user.getUserId())) {
 
-            return _users.get(id);
+            byte[][] result = _passwordService.hashPassword(user.getUserId(), password);
+            user.setHashedPassword(result[0]);
+            user.setSalt(result[1]);
+
+            _users.put(user.getUserId(), user);
+
+            return _users.get(user.getUserId());
         }
         return null;
     }
@@ -70,8 +82,8 @@ public class UsersDbService implements IUsersDbService {
     @Override
     public User findByEmail(String email) {
 
-        for (User u: _users.values()) {
-            if(u.getEmail().equals(email)){
+        for (User u : _users.values()) {
+            if (u.getEmail().equals(email)) {
                 return u;
             }
         }
@@ -90,25 +102,26 @@ public class UsersDbService implements IUsersDbService {
         return max + 1;
     }
 
+
     /*
-    Mock seeding the 'database'
-     */
+   Mock seeding the 'database'
+    */
     private void seedDb() {
 
-        User u1 = new User(1, "JohnDoe", "johndoe@example.com", "Hello123!", "mockhashed".getBytes(), "mocksalt".getBytes());
-        insert(u1);
+        UpsertUser u1 = new UpsertUser(1, "JohnDoe", "johndoe@example.com", "Hello123!");
+        insert(new User(u1), u1.getPassword());
 
-        User u2 = new User(2, "JaneDoe", "janedoe@example.com", "Hello123!", "mockhashed".getBytes(), "mocksalt".getBytes());
-        insert(u2);
+        UpsertUser u2 = new UpsertUser(2, "JaneDoe", "janedoe@example.com", "Hello123!");
+        insert(new User(u2), u2.getPassword());
 
-        User u3 = new User(3, "JohnSmith", "johnsmith@example.com", "Hello123!", "mockhashed".getBytes(), "mocksalt".getBytes());
-        insert(u3);
+        UpsertUser u3 = new UpsertUser(3, "JohnSmith", "johnsmith@example.com", "Hello123!");
+        insert(new User(u3), u3.getPassword());
 
-        User u4 = new User(4, "JimJohnson", "jimjohnson@example.com", "Hello123!", "mockhashed".getBytes(), "mocksalt".getBytes());
-        insert(u4);
+        UpsertUser u4 = new UpsertUser(4, "JimJohnson", "jimjohnson@example.com", "Hello123!");
+        insert(new User(u4), u4.getPassword());
 
-        User u5 = new User(5, "MaryMurphy", "marymurphy@example.com", "Hello123!", "mockhashed".getBytes(), "mocksalt".getBytes());
-        insert(u5);
+        UpsertUser u5 = new UpsertUser(5, "MaryMurphy", "marymurphy@example.com", "Hello123!");
+        insert(new User(u5), u5.getPassword());
 
     }
 }

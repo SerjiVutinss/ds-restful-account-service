@@ -6,9 +6,11 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="restfulaccountservice" />
         <module name="restful-account-service" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="restfulaccountservice" target="1.8" />
+    </bytecodeTargetLevel>
   </component>
 </project>

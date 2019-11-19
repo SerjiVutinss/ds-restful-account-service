@@ -2,32 +2,27 @@ package ie.gmit.serji.restfulaccountservice.api;
 
 import javax.validation.constraints.Pattern;
 
-public class User {
+public class UpsertUser {
 
     private Integer userId;
     private String userName;
     @Pattern(regexp = ".+@.+\\.[a-z]+")
     private String email;
-    private byte[] hashedPassword;
-    private byte[] salt;
+    private String password;
 
-    public User() {
+    public UpsertUser() {
     }
 
-    public User(UpsertUser u) {
-        this.userId = u.getUserId();
-        this.userName = u.getUserName();
-        this.email = u.getEmail();
-    }
-
-    public User(
+    public UpsertUser(
             Integer userId,
             String userName,
-            String email
+            String email,
+            String password
     ) {
         this.userId = userId;
         this.userName = userName;
         this.email = email;
+        this.password = password;
     }
 
 
@@ -55,21 +50,12 @@ public class User {
         this.email = email;
     }
 
-    public byte[] getHashedPassword() {
-        return hashedPassword;
+    public String getPassword() {
+        return password;
     }
 
-    public void setHashedPassword(byte[] hashedPassword) {
-        this.hashedPassword = hashedPassword;
+    public void setPassword(String password) {
+        this.password = password;
     }
-
-    public byte[] getSalt() {
-        return salt;
-    }
-
-    public void setSalt(byte[] salt) {
-        this.salt = salt;
-    }
-
 
 }

@@ -13,10 +13,10 @@ public interface IUsersDbService {
     User getOne(Integer id);
 
     // add and return a new user
-    Integer insert(User u);
+    Integer insert(User u, String password);
 
     // update an existing user
-    User update(int id, User u);
+    User update(User u, String password);
 
     // delete an existing user
     User remove(int id);
