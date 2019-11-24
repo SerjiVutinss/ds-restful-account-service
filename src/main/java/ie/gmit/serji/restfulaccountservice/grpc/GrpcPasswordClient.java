@@ -20,9 +20,15 @@ import java.util.concurrent.TimeUnit;
 public class GrpcPasswordClient implements IGrpcPasswordClient {
 
     // Host the gRPC service is running on.
-    private static final String HOST = "localhost";
+    private static String HOST = "localhost";
     // Port the gRPC service is running on.
-    private static final int PORT = 8080;
+    private static int PORT = 8080;
+
+    public static void configure(String grpcHost, int grpcPort) {
+        HOST = grpcHost;
+        PORT = grpcPort;
+    }
+
 
     // Client setup.
     private final ManagedChannel channel;

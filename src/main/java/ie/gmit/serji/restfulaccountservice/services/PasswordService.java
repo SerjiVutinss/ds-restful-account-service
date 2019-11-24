@@ -19,10 +19,10 @@ public class PasswordService implements IPasswordService {
     /**
      *
      */
-    private final IGrpcPasswordClient _grpcPasswordService;
+    private final IGrpcPasswordClient _grpcPasswordClient;
 
     public PasswordService(IGrpcPasswordClient grpcPasswordClient) {
-        this._grpcPasswordService = grpcPasswordClient;
+        this._grpcPasswordClient = grpcPasswordClient;
     }
 
     @Override
@@ -34,7 +34,7 @@ public class PasswordService implements IPasswordService {
                 .setSalt(ByteString.copyFrom(salt))
                 .build();
 
-        return _grpcPasswordService.validate(input).getValue();
+        return _grpcPasswordClient.validate(input).getValue();
     }
 
     /*
@@ -51,7 +51,7 @@ public class PasswordService implements IPasswordService {
                 .build();
 
         // Call the gRPC client method and store its response as a ListenableFuture.
-        ListenableFuture<HashOutput> future = _grpcPasswordService.hashAsync(hashInput);
+        ListenableFuture<HashOutput> future = _grpcPasswordClient.hashAsync(hashInput);
         // Create a return value for this method.
         byte[][] result = new byte[2][];
         try {

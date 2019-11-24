@@ -4,7 +4,23 @@ import io.dropwizard.Configuration;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.validator.constraints.NotEmpty;
 
+import javax.validation.constraints.NotNull;
+
 public class RestfulAccountServiceConfiguration extends Configuration {
+
+    @NotEmpty
+    private String grpcHost;
+    @NotNull
+    private Integer grpcPort;
+
+
+    public String getGrpcHost() {
+        return grpcHost;
+    }
+
+    public Integer getGrpcPort() {
+        return grpcPort;
+    }
 
     @NotEmpty
     private String template;

@@ -1,6 +1,7 @@
 package ie.gmit.serji.restfulaccountservice;
 
 import ie.gmit.serji.restfulaccountservice.grpc.GrpcPasswordClient;
+import ie.gmit.serji.restfulaccountservice.grpc.IGrpcPasswordClient;
 import ie.gmit.serji.restfulaccountservice.health.TemplateHealthCheck;
 import ie.gmit.serji.restfulaccountservice.resources.HelloWorldResource;
 import ie.gmit.serji.restfulaccountservice.resources.LoginResource;
@@ -26,11 +27,17 @@ public class RestfulAccountServiceApplication extends Application<RestfulAccount
     }
 
     @Override
-    public void initialize(Bootstrap<RestfulAccountServiceConfiguration> bootstrap) { }
+    public void initialize(Bootstrap<RestfulAccountServiceConfiguration> bootstrap) {
+    }
 
     @Override
     public void run(RestfulAccountServiceConfiguration configuration,
                     Environment environment) {
+
+        GrpcPasswordClient.configure(
+                configuration.getGrpcHost(),
+                configuration.getGrpcPort()
+        );
 
 //        environment.jersey().register(new AbstractBinder() {
 //            @Override
