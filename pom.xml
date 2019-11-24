@@ -51,6 +51,7 @@
             <version>${grpc.version}</version>
         </dependency>
 
+<!--        Dagger DI-->
         <dependency>
             <groupId>com.google.dagger</groupId>
             <artifactId>dagger</artifactId>
