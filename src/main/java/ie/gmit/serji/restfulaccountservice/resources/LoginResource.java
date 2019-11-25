@@ -5,6 +5,7 @@ import ie.gmit.serji.restfulaccountservice.api.User;
 import ie.gmit.serji.restfulaccountservice.services.IPasswordService;
 import ie.gmit.serji.restfulaccountservice.services.IUsersDbService;
 
+import javax.inject.Inject;
 import javax.validation.Valid;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -19,6 +20,7 @@ public class LoginResource {
     private  IUsersDbService _usersService;
     private  IPasswordService _passwordService;
 
+    @Inject
     public LoginResource(IUsersDbService usersService, IPasswordService passwordService) {
         _usersService = usersService;
         _passwordService = passwordService;

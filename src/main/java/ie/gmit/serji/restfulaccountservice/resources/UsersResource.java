@@ -2,8 +2,10 @@ package ie.gmit.serji.restfulaccountservice.resources;
 
 import ie.gmit.serji.restfulaccountservice.api.UpsertUser;
 import ie.gmit.serji.restfulaccountservice.api.User;
+import ie.gmit.serji.restfulaccountservice.services.IPasswordService;
 import ie.gmit.serji.restfulaccountservice.services.IUsersDbService;
 
+import javax.inject.Inject;
 import javax.validation.Valid;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -14,8 +16,9 @@ import java.util.List;
 @Produces(MediaType.APPLICATION_JSON)
 public class UsersResource {
 
-    private  IUsersDbService _usersDbService;
+    private IUsersDbService _usersDbService;
 
+    @Inject
     public UsersResource(IUsersDbService usersService) {
         _usersDbService = usersService;
     }

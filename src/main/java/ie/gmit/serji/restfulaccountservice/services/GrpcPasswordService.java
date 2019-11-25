@@ -5,25 +5,33 @@ import com.google.protobuf.ByteString;
 import ie.gmit.serji.passwordservice.HashInput;
 import ie.gmit.serji.passwordservice.HashOutput;
 import ie.gmit.serji.passwordservice.ValidateInput;
+import ie.gmit.serji.restfulaccountservice.grpc.GrpcPasswordClient;
 import ie.gmit.serji.restfulaccountservice.grpc.IGrpcPasswordClient;
 
+import javax.inject.Inject;
 import java.util.concurrent.ExecutionException;
 
 /**
  * Implementation of IPasswordService
- *
+ * <p>
  * See IPasswordService for details of implemented methods
  */
-public class PasswordService implements IPasswordService {
+public class GrpcPasswordService implements IPasswordService {
 
     /**
      *
      */
     private final IGrpcPasswordClient _grpcPasswordClient;
 
-    public PasswordService(IGrpcPasswordClient grpcPasswordClient) {
-        this._grpcPasswordClient = grpcPasswordClient;
+    @Inject
+    public GrpcPasswordService() {
+        // Use the GrpcPasswordClient singleton
+        _grpcPasswordClient = GrpcPasswordClient.getInstance();
     }
+
+//    public PasswordService(IGrpcPasswordClient grpcPasswordClient) {
+//        this._grpcPasswordClient = grpcPasswordClient;
+//    }
 
     @Override
     public boolean validatePassword(String password, byte[] hashedPassword, byte[] salt) {
@@ -57,6 +65,7 @@ public class PasswordService implements IPasswordService {
         try {
             // Block until the response is received.
             HashOutput response = future.get();
+            System.out.println("Received Hashed Password and Salt from Server");
             // Set the values in the return value.
             result[0] = response.getHashedPassword().toByteArray();
             result[1] = response.getSalt().toByteArray();

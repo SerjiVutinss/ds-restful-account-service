@@ -51,7 +51,7 @@
             <version>${grpc.version}</version>
         </dependency>
 
-<!--        Dagger DI-->
+<!--        Google Dagger-->
         <dependency>
             <groupId>com.google.dagger</groupId>
             <artifactId>dagger</artifactId>
@@ -149,6 +149,7 @@
                     <source>1.8</source>
                     <target>1.8</target>
 
+<!--                    Google Dagger-->
                     <annotationProcessorPaths>
                         <path>
                             <groupId>com.google.dagger</groupId>
@@ -156,6 +157,7 @@
                             <version>${dagger.version}</version>
                         </path>
                     </annotationProcessorPaths>
+
                 </configuration>
             </plugin>
 

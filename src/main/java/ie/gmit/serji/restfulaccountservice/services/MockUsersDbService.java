@@ -4,6 +4,7 @@ import ie.gmit.serji.restfulaccountservice.api.UpsertUser;
 import ie.gmit.serji.restfulaccountservice.api.User;
 import ie.gmit.serji.restfulaccountservice.data.MockDataStore;
 
+import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -11,13 +12,14 @@ import java.util.Map;
 /*
 Mock Database operations
  */
-public class UsersDbService implements IUsersDbService {
+public class MockUsersDbService implements IUsersDbService {
 
     private Map<Integer, User> _users;
 
     private IPasswordService _passwordService;
 
-    public UsersDbService(IPasswordService passwordService) {
+    @Inject
+    public MockUsersDbService(IPasswordService passwordService) {
         _passwordService = passwordService;
 
         System.out.println("CREATING DB");

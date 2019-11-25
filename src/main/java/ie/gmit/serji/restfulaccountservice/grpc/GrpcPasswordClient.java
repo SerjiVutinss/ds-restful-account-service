@@ -90,7 +90,7 @@ public class GrpcPasswordClient implements IGrpcPasswordClient {
         };
 
         try {
-            System.out.println("Requesting HashOutput Future");
+            System.out.println("INFO " + "Requesting Hashed password and Salt from gRPC Server");
             // Get the HashOutput response as a ListenableFuture.
             ListenableFuture<HashOutput> output = futureStub.hash(hashInput);
             // Return the ListenableFuture - this will be consumed by the IPasswordService implementation.
