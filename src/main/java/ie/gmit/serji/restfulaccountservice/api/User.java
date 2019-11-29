@@ -30,7 +30,6 @@ public class User {
         this.email = email;
     }
 
-
     public Integer getUserId() {
         return userId;
     }

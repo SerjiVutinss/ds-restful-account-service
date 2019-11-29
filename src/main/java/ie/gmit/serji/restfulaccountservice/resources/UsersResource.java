@@ -2,7 +2,6 @@ package ie.gmit.serji.restfulaccountservice.resources;
 
 import ie.gmit.serji.restfulaccountservice.api.UpsertUser;
 import ie.gmit.serji.restfulaccountservice.api.User;
-import ie.gmit.serji.restfulaccountservice.services.IPasswordService;
 import ie.gmit.serji.restfulaccountservice.services.IUsersDbService;
 
 import javax.inject.Inject;
@@ -13,7 +12,8 @@ import javax.ws.rs.core.Response;
 import java.util.List;
 
 @Path("/users")
-@Produces(MediaType.APPLICATION_JSON)
+@Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.TEXT_XML})
+@Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.TEXT_XML})
 public class UsersResource {
 
     private IUsersDbService _usersDbService;
@@ -31,6 +31,16 @@ public class UsersResource {
         return Response.ok(allUsers).build();
     }
 
+    // TODO: check that request is well-formed
+    @POST
+    public Response createUser(@Valid UpsertUser user) {
+        // Insert the new user to get a userId
+        User u = new User(user);
+        u = _usersDbService.insert(u, user.getPassword());
+
+        return Response.status(Response.Status.CREATED).entity(u).build();
+    }
+
     @GET
     @Path("/{userId}")
     public Response getUserById(@PathParam("userId") Integer userId) {
@@ -43,16 +53,6 @@ public class UsersResource {
             // object not found by service, return NOT FOUND
             return Response.status(Response.Status.NOT_FOUND).build();
         }
-    }
-
-    // TODO: check that request is well-formed
-    @POST
-    public Response createUser(@Valid UpsertUser user) {
-        // Insert the new user to get a userId
-        User u = new User(user);
-        u = _usersDbService.insert(u, user.getPassword());
-
-        return Response.status(Response.Status.CREATED).entity(u).build();
     }
 
     @PUT
