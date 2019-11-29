@@ -24,6 +24,6 @@ public interface IPasswordService {
      * @param salt
      * @return
      */
-    boolean validatePassword(String password, byte[] hashedPassword, byte[] salt);
+    boolean validatePassword(String password, byte[] hashedPassword, byte[] salt) throws Exception;
 
 }

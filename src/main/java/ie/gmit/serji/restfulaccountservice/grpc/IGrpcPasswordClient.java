@@ -22,7 +22,7 @@ public interface IGrpcPasswordClient {
      * @param validateInput object with properties to be checked
      * @return true if properties match
      */
-    BoolValue validate(ValidateInput validateInput);
+    BoolValue validate(ValidateInput validateInput) throws Exception;
 
     /**
      * Hashes the password property on the input object and returns a future of HashOutput

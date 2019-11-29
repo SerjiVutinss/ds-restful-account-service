@@ -48,6 +48,10 @@ public class MockUsersDbService implements IUsersDbService {
         user.setUserId(getNewKey());
         // generate hash and salt and set on this object
         byte[][] result = _passwordService.hashPassword(user.getUserId(), password);
+        if(result[0]==null || result[1] ==null){
+            return null;
+        }
+
         // now create a User object from the UpsertUser
         // set its hashedPassword and salt values
         user.setHashedPassword(result[0]);
@@ -63,6 +67,10 @@ public class MockUsersDbService implements IUsersDbService {
         if (_users.containsKey(userId)) {
 
             byte[][] result = _passwordService.hashPassword(userId, password);
+            if(result[0]==null || result[1] ==null){
+                return null;
+            }
+
             user.setHashedPassword(result[0]);
             user.setSalt(result[1]);
             user.setUserId(userId);

@@ -38,6 +38,10 @@ public class UsersResource {
         User u = new User(user);
         u = _usersDbService.insert(u, user.getPassword());
 
+        if (u == null) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        }
+
         return Response.status(Response.Status.CREATED).entity(u).build();
     }
 
@@ -65,6 +69,9 @@ public class UsersResource {
             // update the user in the database, passing in the password so that
             // a new hash and salt can be generated
             updatedUser = _usersDbService.update(userId, updatedUser, user.getPassword());
+            if (updatedUser == null) {
+                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+            }
 
             // return the updated user from the database
             return Response.ok(updatedUser).build();

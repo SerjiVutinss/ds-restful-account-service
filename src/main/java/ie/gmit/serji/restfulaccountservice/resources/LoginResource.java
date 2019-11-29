@@ -32,7 +32,12 @@ public class LoginResource {
         User user = _usersService.findByEmail(loginUser.getEmail());
         if (user != null) {
             // user exists - check if password is valid by calling IPasswordService implementation
-            boolean isValid = _passwordService.validatePassword(loginUser.getPassword(), user.getHashedPassword(), user.getSalt());
+            boolean isValid = false;
+            try {
+                isValid = _passwordService.validatePassword(loginUser.getPassword(), user.getHashedPassword(), user.getSalt());
+            } catch (Exception e) {
+                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+            }
             // valid password - return OK and the User
             if (isValid) return Response.ok(user).build();
         }

@@ -47,6 +47,8 @@ All of the seeded Users have been assigned the same password for ease of testing
 
 * Should a badly formed request be sent to any endpoint, an error message is returned detailing the error, e.g. not a valid email address.
 
+* Should the gRPC be unavailable, any endpoints depending on that service will return a `500 INTERNAL SERVER ERROR` response when a request is sent to them.
+
 ### Dependency Injection
 
 * I have used the [Google Dagger](https://github.com/google/dagger) framework to provide dependency injection of certain services to the resources and other services.

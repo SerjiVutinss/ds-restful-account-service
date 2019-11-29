@@ -63,7 +63,7 @@ public class GrpcPasswordClient implements IGrpcPasswordClient {
 
     // IGrpdPasswordClient implementation.
     @Override
-    public BoolValue validate(ValidateInput validateInput) {
+    public BoolValue validate(ValidateInput validateInput) throws Exception {
         // Simply call the gRPC method synchronously and return the response.
         return blockingStub.validate(validateInput);
     }
@@ -108,6 +108,12 @@ public class GrpcPasswordClient implements IGrpcPasswordClient {
     // Synchronous call to hash() - unused
     @Override
     public HashOutput hash(HashInput hashInput) {
-        return blockingStub.hash(hashInput);
+        try {
+            return blockingStub.hash(hashInput);
+
+        } catch (Exception ex) {
+            System.out.println("GRPC SERVICE NOT AVAILABLE!");
+        }
+        return null;
     }
 }

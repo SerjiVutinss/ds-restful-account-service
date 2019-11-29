@@ -34,7 +34,7 @@ public class GrpcPasswordService implements IPasswordService {
 //    }
 
     @Override
-    public boolean validatePassword(String password, byte[] hashedPassword, byte[] salt) {
+    public boolean validatePassword(String password, byte[] hashedPassword, byte[] salt) throws Exception {
 
         ValidateInput input = ValidateInput.newBuilder()
                 .setPassword(password)
@@ -71,9 +71,9 @@ public class GrpcPasswordService implements IPasswordService {
             result[1] = response.getSalt().toByteArray();
 
         } catch (InterruptedException e) {
-            e.printStackTrace();
+//            e.printStackTrace();
         } catch (ExecutionException e) {
-            e.printStackTrace();
+//            e.printStackTrace();
         }
         // Return the values.
         return result;
