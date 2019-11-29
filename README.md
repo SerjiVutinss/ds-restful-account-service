@@ -16,7 +16,7 @@ Ensure that the gRPC Password Service is running locally - by default this runs 
 2. Install Maven dependencies: `mvn install`
 3. Compile using Maven: `mvn compile `
 4. Package using Maven: `mvn package`
-5. Run the server using the provided config: `java -jar restful-account-service-1.0-SNAPSHOT.jar server rest-account-service.yaml`
+5. Run the server using the provided config: `java -jar target/restful-account-service-1.0-SNAPSHOT.jar server rest-account-service.yaml`
 6. Check that the REST service is running by testing the endpoint `localhost:8081/users` from your browser or Postman, Fiddler, etc
 
 ## Design Notes
